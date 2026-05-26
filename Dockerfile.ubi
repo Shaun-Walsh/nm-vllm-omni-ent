@@ -50,7 +50,6 @@ RUN microdnf install -y --nodocs \
 ## System Dependencies (multimedia support for vllm-omni) #####################
 FROM cuda-base AS system-deps
 # libsndfile: needed by the soundfile Python package for audio I/O
-# System ffmpeg is NOT needed — imageio[ffmpeg] bundles a static binary via imageio-ffmpeg.
 # TODO: sox (for pysox/Qwen3-TTS) requires RPM Fusion libs (libmp3lame, libmad, libao) —
 #   not available in UBI/EPEL/CRB. Add when RPM Fusion or static sox is sorted out.
 RUN microdnf install -y libsndfile \
@@ -90,7 +89,6 @@ ENV LIBRARY_PATH="${CUDA_HOME}/lib64/stubs:/usr/lib64"
 # Triton needs a CC compiler, triton-kernels install from a git URL
 RUN microdnf install -y gcc git && \
     microdnf clean all
-
 
 COPY LICENSE /licenses/vllm.md
 RUN mkdir -p /opt/app-root /app/data/template && \
